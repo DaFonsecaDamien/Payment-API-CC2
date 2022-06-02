@@ -1,0 +1,107 @@
+swagger: "2.0"
+info:
+  description: "Microservice CC2"
+  version: "1.0.0"
+  title: "Microservice CC2"
+  termsOfService: "http://swagger.io/terms/"
+  contact:
+    email: "ddafonseca@myges.fr"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "microservice.swagger.io"
+basePath: "/v1"
+tags:
+- name: "PaymentAPI"
+  description: "Payment API [CC2 microservice]"
+schemes:
+- "https"
+- "http"
+paths:
+  /payments/:
+    post:
+      tags:
+      - "payment"
+      summary: "Make a payment"
+      description: ""
+      operationId: "makePayment"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "payment object"
+        required: true
+        schema:
+          type: "array"
+          items:
+            $ref: "#/definitions/Payment"
+      responses:
+        default:
+          description: "successful operation"
+        "400":
+          description: "Invalid data in the payment JSON"
+ 
+definitions:
+  Payment:
+    type: "object"
+    required: [checkout_id]
+    properties:
+      buyer_info:
+        type: "array"
+        items:
+          $ref: "#/definitions/BuyerInfo"
+        description: "The information of the buyer" 
+      checkout_id:
+        type: "string"
+        description: "A globally unique ID for this checkout"
+      credit_card_info:
+        type: "array"
+        items:
+          $ref: "#/definitions/CreditCardInfo"
+          description: "This could be encrypted credit card information or a payment token. The value is PSP-specific"
+      payment_orders:
+        type: "array"
+        items:
+          $ref: "#/definitions/PaymentOrders"
+          description: "A list of the payment orders"
+      seller_account:
+        type: "string"
+        description: "Which seller will receive the money"
+      amount:
+        type: "string"
+        description: "The transaction amount of the order"
+      currency:
+        type: "string"
+        description: "The currency for the order"
+        example: "EUR"
+      payment_order_id:
+        type: "string"
+        description: "A globally unique ID for this payment"
+  BuyerInfo:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      username:
+        type: "string"
+      firstName:
+        type: "string"
+  CreditCardInfo:
+    type: "object"
+    properties:
+      type:
+        type: "string"
+      code:
+        type: "string"
+      ccv:
+        type: "string"
+      expiry_date:
+        type: "string"
+        format: "date"
+  PaymentOrders:
+    type: "object"
+    properties:
+      payment_orders_id:
+        type: "string"
+          
