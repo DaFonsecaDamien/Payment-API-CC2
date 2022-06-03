@@ -12,24 +12,26 @@ public class RedisPaymentRepository implements RedisRepository{
 
     @Qualifier("redisTemplate")
     @Autowired
-    private RedisTemplate template;
+    private RedisTemplate<String, String> template;
 
     @Override
     public void save(String idempotencyKey, String paymentStatus) {
+        template.opsForValue().set(idempotencyKey, paymentStatus);
+        template.expire(idempotencyKey,60, TimeUnit.MINUTES);
     }
 
     @Override
     public String findByKey(String key) {
-        return null;
+        return template.opsForValue().get(key);
     }
 
     @Override
     public boolean keyExist(String key) {
-        return false;
+        return Boolean.TRUE.equals(template.hasKey(key));
     }
 
     @Override
     public void remove(String key) {
-
+        template.delete(key);
     }
 }
