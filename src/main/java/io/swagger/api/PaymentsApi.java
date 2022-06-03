@@ -44,7 +44,7 @@ public interface PaymentsApi {
     @RequestMapping(value = "/payments/",
         consumes = { "application/json" }, 
         method = RequestMethod.POST)
-    ResponseEntity<Void> makePayment(@Parameter(in = ParameterIn.DEFAULT, description = "payment object", required=true, schema=@Schema()) @Valid @RequestBody Payment body);
+    ResponseEntity<String> makePayment(@RequestHeader("idempotency-key") String idempotencyKey, @Parameter(in = ParameterIn.DEFAULT, description = "payment object", required=true, schema=@Schema()) @Valid @RequestBody Payment body);
 
 }
 

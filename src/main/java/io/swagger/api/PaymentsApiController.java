@@ -42,15 +42,18 @@ public class PaymentsApiController implements PaymentsApi {
 
     private final HttpServletRequest request;
 
+    private final PaymentsService paymentsService;
+
     @org.springframework.beans.factory.annotation.Autowired
-    public PaymentsApiController(ObjectMapper objectMapper, HttpServletRequest request) {
+    public PaymentsApiController(ObjectMapper objectMapper, HttpServletRequest request, PaymentsService paymentsService) {
         this.objectMapper = objectMapper;
         this.request = request;
+        this.paymentsService = paymentsService;
     }
 
-    public ResponseEntity<Void> makePayment(@Parameter(in = ParameterIn.DEFAULT, description = "payment object", required=true, schema=@Schema()) @Valid @RequestBody Payment body) {
+    public ResponseEntity<String> makePayment(@RequestHeader("idempotency-key") String idempotencyKey, @Parameter(in = ParameterIn.DEFAULT, description = "payment object", required=true, schema=@Schema()) @Valid @RequestBody Payment body) {
         String accept = request.getHeader("Accept");
-        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+        return new ResponseEntity<String>(this.paymentsService.makePayments(body, idempotencyKey), HttpStatus.OK);
     }
 
 }

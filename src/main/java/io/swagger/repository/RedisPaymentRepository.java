@@ -10,9 +10,11 @@ import java.util.concurrent.TimeUnit;
 @Repository
 public class RedisPaymentRepository implements RedisRepository{
 
-    @Qualifier("redisTemplate")
-    @Autowired
-    private RedisTemplate<String, String> template;
+    private final RedisTemplate<String, String> template;
+
+    public RedisPaymentRepository(@Qualifier("redisTemplate") RedisTemplate<String, String> template) {
+        this.template = template;
+    }
 
     @Override
     public void save(String idempotencyKey, String paymentStatus) {
